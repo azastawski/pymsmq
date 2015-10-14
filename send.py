@@ -13,6 +13,6 @@ msg = win32com.client.Dispatch("MSMQ.MSMQMessage")
 for i in range(0,1):
 
 	msg.Label = "Task " + str(i)
-	msg.Body = "{report:12}"
+	msg.Body = "{report:" + str(i) + "}"
 
 	msg.Send( queue )

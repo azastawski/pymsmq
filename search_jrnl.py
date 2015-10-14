@@ -5,7 +5,7 @@ import os
 qi = win32com.client.Dispatch("MSMQ.MSMQQueueInfo")
 computer_name = os.getenv('COMPUTERNAME')
 qi.FormatName="direct=os:"+computer_name+"\\private$\\pythontest;journal"
-#qi.PathName = r".\Private$\Tasks;journal"
+strFind = "{report:0}"
 
 from constants import *
 queue = qi.Open(MQ_PEEK_ACCESS, MQ_DENY_NONE)
@@ -13,19 +13,19 @@ queue = qi.Open(MQ_PEEK_ACCESS, MQ_DENY_NONE)
 while True:
 
 
-    msg = queue.PeekCurrent(WantBody=True,ReceiveTimeout='0')
+    msg = queue.PeekCurrent(ReceiveTimeout='1000')
 
 
     while msg: 
 
         print( msg.Label )
         print( msg.Body )
-
-        msg = queue.PeekNext(WantBody=True,ReceiveTimeout='0')
+        #test Body for search string and write it out to disk
+        if strFind in msg.Body:
+            with open("Output.txt", "w") as text_file:
+                text_file.write("\n{}".format(msg.Body))
+        msg = queue.PeekNext(ReceiveTimeout='1000')
 
     break
-    #else: 
-
-    #    print ( 'waiting for messages' )
 
 
