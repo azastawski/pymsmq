@@ -1,7 +1,9 @@
 import win32com.client	
+import os
 
 qi = win32com.client.Dispatch("MSMQ.MSMQQueueInfo")
-qi.PathName = r".\Private$\Tasks"
+computer_name = os.getenv('COMPUTERNAME')
+qi.FormatName="direct=os:"+computer_name+"\\private$\\pythontest"
 
 from constants import *
 queue = qi.Open(MQ_RECEIVE_ACCESS, MQ_DENY_NONE)
